@@ -1,0 +1,30 @@
+# Local .terraform directory (downloaded providers/modules)
+.terraform/
+
+# State files — never commit these
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+
+# Variable files that may contain secrets
+terraform.tfvars
+*.auto.tfvars
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Override files (for local testing only)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# SSH keys
+*.pem
+*.pub
+
+# OS / editor clutter
+.DS_Store
+.idea/
+.vscode/
