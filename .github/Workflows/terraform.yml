@@ -1,0 +1,48 @@
+name: Terraform
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            us-east-1
+
+      - name: Create tfvars
+        run: |
+          cat > terraform.tfvars <<EOF
+          project_name        = "${{ secrets.PROJECT_NAME }}"
+          environment         = "dev"
+          owner_email         = "${{ secrets.OWNER_EMAIL }}"
+          key_pair_name       = "${{ secrets.KEY_PAIR_NAME }}"
+          s3_bucket_name      = "${{ secrets.S3_BUCKET_NAME }}"
+          dynamodb_table_name = "${{ secrets.DYNAMODB_TABLE_NAME }}"
+          allowed_ssh_cidr    = "${{ secrets.ALLOWED_SSH_CIDR }}"
+          EOF
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
