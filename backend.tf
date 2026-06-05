@@ -6,7 +6,7 @@ terraform {
     bucket         = "sankar-github-bucket"        # S3 bucket you created manually
     key            = "global/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-lock"              # DynamoDB table you created manually
+    dynamodb_table = "test_table"              # DynamoDB table you created manually
     encrypt        = true
   }
 }
